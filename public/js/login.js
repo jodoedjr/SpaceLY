@@ -3,6 +3,7 @@ $(document).ready(function() {
     navigator.geolocation.getCurrentPosition(updatePlanetariumLocation, showErrorGeolocation);
   } else {
     // alert user that location isn't available via geolocation
+    // consider converting these alerts to toasts, or providing an initial prompt asking the user to allow app to access geolocation
     alert("Geolocation is not supported by your browser");
   }
 
@@ -16,6 +17,7 @@ function updatePlanetariumLocation(data){
       longitude: data.coords.longitude,
     });
   }
+
 
   function showErrorGeolocation(error) {
     switch(error.code) {

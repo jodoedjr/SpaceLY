@@ -1,43 +1,43 @@
-$(document).ready(function() {
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(updatePlanetariumLocation, showErrorGeolocation);
+$(document).ready(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      updatePlanetariumLocation,
+      showErrorGeolocation
+    );
   } else {
     // alert user that location isn't available via geolocation
     // consider converting these alerts to toasts, or providing an initial prompt asking the user to allow app to access geolocation
     alert("Geolocation is not supported by your browser");
   }
-
-
-function updatePlanetariumLocation(data){
-    var planetarium;
-    planetarium = S.virtualsky({
-      id: "starmap", // This should match the ID used in the DOM
-      projection: "stereo",
-      latitude: data.coords.latitude,
-      longitude: data.coords.longitude,
-    });
-  }
-
-
-  function showErrorGeolocation(error) {
-    switch(error.code) {
-      case error.PERMISSION_DENIED:
-        alert("User denied the request for Geolocation.");
-        break;
-      case error.POSITION_UNAVAILABLE:
-        alert("Location information is unavailable.");
-        break;
-      case error.TIMEOUT:
-        alert("The request to get user location timed out.");
-        break;
-      case error.UNKNOWN_ERROR:
-        alert("An unknown error occurred.");
-        break;
-    }
-  }
 });
 
+function updatePlanetariumLocation(data) {
+  let planetarium = null;
+  planetarium = S.virtualsky({
+    id: "starmap", // This should match the ID used in the DOM
+    projection: "stereo",
+    latitude: data.coords.latitude,
+    longitude: data.coords.longitude
+  });
+  console.log(planetarium);
+}
 
+function showErrorGeolocation(error) {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      alert("User denied the request for Geolocation.");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      alert("Location information is unavailable.");
+      break;
+    case error.TIMEOUT:
+      alert("The request to get user location timed out.");
+      break;
+    case error.UNKNOWN_ERROR:
+      alert("An unknown error occurred.");
+      break;
+  }
+}
 
 // $(document).ready(() => {
 //   // Getting references to our form and inputs

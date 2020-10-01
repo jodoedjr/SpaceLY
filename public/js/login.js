@@ -10,12 +10,15 @@ $(document).ready(() => {
     alert("Geolocation is not supported by your browser");
   }
 
-  $("#starmap").click(function (event) {
+  $("#starmap").click(event => {
     console.log(event);
-  })
+    closeNav();
+  });
 });
 
 function updatePlanetariumLocation(data) {
+  openNav();
+  closeNav();
   let planetarium = null;
   planetarium = S.virtualsky({
     id: "starmap", // This should match the ID used in the DOM
@@ -23,7 +26,7 @@ function updatePlanetariumLocation(data) {
     latitude: data.coords.latitude,
     longitude: data.coords.longitude
   });
-  //console.log(planetarium);
+  console.log(planetarium);
 }
 
 function showErrorGeolocation(error) {

@@ -9,9 +9,16 @@ $(document).ready(() => {
     // consider converting these alerts to toasts, or providing an initial prompt asking the user to allow app to access geolocation
     alert("Geolocation is not supported by your browser");
   }
+
+  $("#starmap").click(event => {
+    console.log(event);
+    closeNav();
+  });
 });
 
 function updatePlanetariumLocation(data) {
+  openNav();
+  closeNav();
   let planetarium = null;
   planetarium = S.virtualsky({
     id: "starmap", // This should match the ID used in the DOM
@@ -37,6 +44,16 @@ function showErrorGeolocation(error) {
       alert("An unknown error occurred.");
       break;
   }
+}
+
+/* Set the width of the side navigation to 250px */
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
 }
 
 // $(document).ready(() => {

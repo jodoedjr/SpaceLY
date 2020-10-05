@@ -142,6 +142,79 @@
           </div>
         </div>
 
+        <!-- MY JOURNALS SECTION! -->
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+              <a
+                class="collapsed"
+                role="button"
+                data-toggle="collapse"
+                data-parent="#accordion"
+                href="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                My Journals
+              </a>
+            </h4>
+          </div>
+          <div
+            id="collapseTwo"
+            class="panel-collapse collapse"
+            role="tabpanel"
+            aria-labelledby="headingTwo"
+          >
+            <div class="panel-body">
+              <span id="add-journal"
+                ><i class="fas fa-plus-square"></i> Add Journal</span
+              >
+              <ul id="list-holder" class="no-bullets">
+                <li data-listName="placeholder1">
+                  Placeholder 1 <i class="fas fa-plus-square"></i
+                  ><i class="fas fa-share-square share-arrow"></i
+                  ><i class="far fa-times-circle delete-x"></i>
+                </li>
+                <li data-listName="placeholder2">
+                  Placeholder 2 <i class="fas fa-plus-square"></i
+                  ><i class="fas fa-share-square share-arrow"></i
+                  ><i class="far fa-times-circle delete-x"></i>
+                  <i class="far fa-times-circle delete-x"></i>
+                </li>
+              </ul>
+              <ul id="nameEntry" class="no-bullets" style="display: none;">
+                <!-- new entry fields -->
+                <li>
+                  <form class="newJournal" style="padding-top: 10px;">
+                    <div class="form-group">
+                      <input
+                        type="textarea"
+                        class="form-control"
+                        id="journal-name-input"
+                        placeholder="New Journal Name"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      id="save-journal-name"
+                      class="btn btn-success"
+                    >
+                      Save Name
+                    </button>
+                    <button
+                      type="cancel"
+                      id="cancel-journal-name"
+                      class="btn btn-danger"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <!-- SHARED JOURNALS SECTION! -->
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="headingThree">
@@ -333,7 +406,7 @@
               <button type="submit" id="savePrefs" class="btn btn-warning">
                 Show
               </button>
-              <button type="submit" id="savePrefs" class="btn btn-success" disabled>
+              <button type="submit" id="savePrefs" class="btn btn-success">
                 Save
               </button>
             </div>

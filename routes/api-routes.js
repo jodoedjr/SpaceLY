@@ -50,4 +50,23 @@ module.exports = function(app) {
       });
     }
   });
+
+  app.post("/api/journal", (req, res) => {
+    console.log(req.body);
+    db.Journal.create({
+      title: req.body.title,
+      shared: req.body.shared,
+      points: req.body.points,
+      color: req.body.color,
+      UserId: req.body.UserId
+    })
+      .then(() => {
+        //res.redirect(307, "/api/login");
+      })
+      .catch(err => {
+        res.status(401).json(err);
+      });
+  });
+  
+
 };

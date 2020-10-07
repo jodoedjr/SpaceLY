@@ -51,8 +51,31 @@ module.exports = function(app) {
     }
   });
 
+  //********************************************************
+  // Journal APIs
+
+  //get user's/shared journals
+  app.get("/api/journal", (req, res) => {
+    //get user's journals and shared journals
+    //setup a query object
+    const query = {};
+    if (req.query.UserId) {
+      query.UserId = req.query.user_id;
+    }
+    query.shared = true;
+    //find all journals by user, or shared with user
+    db.Journal.findAll({
+      where: query,
+      include: [db.User]
+    }).then(dbJournal => {
+      //send results back to front end
+      res.json(dbJournal);
+    });
+  });
+
+  //post new journal
   app.post("/api/journal", (req, res) => {
-    console.log(req.body);
+    //create a Journal table entry with title, shared status, points list, color, and user id
     db.Journal.create({
       title: req.body.title,
       shared: req.body.shared,
@@ -60,13 +83,35 @@ module.exports = function(app) {
       color: req.body.color,
       UserId: req.body.UserId
     })
-      .then(() => {
+      .then(result => {
         //res.redirect(307, "/api/login");
+        res.json(result);
       })
       .catch(err => {
         res.status(401).json(err);
       });
   });
-  
 
+  //delete a journal
+  app.delete("/api/journal/:id", (req, res) => {
+    db.Journal.destroy({
+      // destroy id'ed journal
+      where: {
+        id: req.params.id
+      }
+    }).then(dbJournal => {
+      res.json(dbJournal); // send result back
+    });
+  });
+
+  //update existing journal
+  app.put("/api/journal", (req, res) => {
+    db.Journal.update(req.body, {
+      where: {
+        id: req.body.id
+      }
+    }).then(dbJournal => {
+      res.json(dbJournal);
+    });
+  });
 };

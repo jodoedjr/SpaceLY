@@ -1,10 +1,8 @@
 let user;
+let planetarium;
 $(document).ready(() => {
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
-
-  var planetarium;
-  
   $.get("/api/user_data").then(data => {
     user = data;
     $(".member-name").text(data.email);
@@ -28,14 +26,14 @@ $(document).ready(() => {
     closeNav();
   });
 
-  $(".panel-collapse").on("show.bs.collapse", function () {
+  $(".panel-collapse").on("show.bs.collapse", () => {
     // un-collapse nav drawer sections
     $(this)
       .siblings(".panel-heading")
       .addClass("active");
   });
 
-  $(".panel-collapse").on("hide.bs.collapse", function () {
+  $(".panel-collapse").on("hide.bs.collapse", () => {
     // un-collapse nav draw sections
     $(this)
       .siblings(".panel-heading")
@@ -44,7 +42,7 @@ $(document).ready(() => {
   //*********************************************************************************************
   //// Handle Nav Drawer Clicks
   $("#mySidenav").click(event => {
-    event.preventDefault()
+    event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
 
@@ -57,7 +55,7 @@ $(document).ready(() => {
       } else {
         tar.classList.add("showList");
         //add code to update star canvas - show items in this list
-        let array = [
+        const array = [
           {
             ra: 10.68458333,
             dec: 41.26916667,
@@ -88,7 +86,7 @@ $(document).ready(() => {
             label: "Sculptor Galaxy",
             color: "rgb(255, 220, 220)"
           }
-        ]
+        ];
         updatePlanetariumPointers(array);
       }
     }
@@ -118,17 +116,21 @@ $(document).ready(() => {
 
 //*********************************************************************************************
 ////Handle Journal Add
-let numberPointsShown = 1;
+//let numberPointsShown = 1;
 const journalForm = $("form.journal");
 journalForm.on("submit", event => {
   event.preventDefault();
-  let pointObject = {}
-  $("#point-list").children("input").each(function () {
-    pointObject[$(this).attr('id')] = $(this).val();
-  })
+  const pointObject = {};
+  $("#point-list")
+    .children("input")
+    .each(() => {
+      pointObject[$(this).attr("id")] = $(this).val();
+    });
   const journalData = {
-    title: $("input#journal-name-input").val().trim(),
-    shared: $("input#shared-check").is(':checked'),
+    title: $("input#journal-name-input")
+      .val()
+      .trim(),
+    shared: $("input#shared-check").is(":checked:"),
     points: JSON.stringify(pointObject),
     color: $("input#journal-color").val(),
     UserId: user.id
@@ -139,16 +141,16 @@ journalForm.on("submit", event => {
   }
 
   $.post("/api/journal", journalData)
-    .then((res) => {
+    .then(res => {
       console.log(res);
     })
     .catch(err => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 });
 
 //add more points to journal
-$("#journal-add-point").on("click", event => {
+$("#journal-add-point").on("click", () => {
   console.log("here");
   //   $("#journal-form-group").append
   //   <input
@@ -186,20 +188,19 @@ function updatePlanetariumLocation(data) {
     latitude: data.coords.latitude,
     longitude: data.coords.longitude
   });
-
 }
 
 function updatePlanetariumPointers(data) {
   for (let i = 0; i < data.length; i++) {
-    let element = data[i];
+    const element = data[i];
     planetarium.addPointer({
-      'ra': element.ra,
-      'dec': element.dec,
-      'label': element.label,
-      //'img': "",
-      //'url': "",
-      //'credit': "",
-      'colour': element.color
+      ra: element.ra,
+      dec: element.dec,
+      label: element.label,
+      //img: "",
+      //url: "",
+      //credit: "",
+      colour: element.color
     });
   }
 }

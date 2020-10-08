@@ -54,7 +54,7 @@
             aria-labelledby="headingOne"
           >
             <div class="panel-body">
-              <a id="logout" class="navbar-brand" href="/logout">
+              <a id="logout" href="/logout">
                 Logout
               </a>
             </div>
@@ -92,48 +92,10 @@
                 data-target="#JournalModalCenter"
                 ><i class="fas fa-plus-square"></i> Add Journal</span
               >
-              <ul id="list-holder" class="no-bullets">
-                <li style="font-size: 20px;" data-listName="placeholder1">
-                  Placeholder 1
-                  <i class="fas fa-plus-square add-square"></i
-                  ><i class="fas fa-share-square share-arrow"></i
-                  ><i class="far fa-times-circle delete-x"></i>
-                </li>
-                <li style="font-size: 20px;" data-listName="placeholder2">
-                  Placeholder 2
-                  <i class="fas fa-plus-square add-square"></i
-                  ><i class="fas fa-share-square share-arrow"></i
-                  ><i class="far fa-times-circle delete-x"></i>
-                </li>
+              <ul id="journal-list" class="no-bullets">
+                <!-- journal li's go here! -->
               </ul>
               <ul id="nameEntry" class="no-bullets" style="display: none;">
-                <!-- new entry fields -->
-                <!-- <li>
-                  <form class="newJournal" style="padding-top: 10px;">
-                    <div class="form-group">
-                      <input
-                        type="textarea"
-                        class="form-control"
-                        id="journal-name-input"
-                        placeholder="New Journal Name"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      id="save-journal-name"
-                      class="btn btn-success"
-                    >
-                      Save Name
-                    </button>
-                    <button
-                      type="cancel"
-                      id="cancel-journal-name"
-                      class="btn btn-danger"
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                </li> -->
               </ul>
             </div>
           </div>
@@ -163,7 +125,8 @@
             aria-labelledby="headingThree"
           >
             <div class="panel-body">
-              <h5>Coming Soon!</h5>
+              <ul id="shared-journal-list" class="no-bullets">
+              </ul>
             </div>
           </div>
         </div>

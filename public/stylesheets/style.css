@@ -64,10 +64,13 @@ ul.no-bullets {
 
 ul li:hover{ 
   /* ,ul li.active */
-  color: yellow;
+  /* color: yellow; */
 }
 .showList{
-  color: gold;
+  /* color: gold; */
+}
+.noShowList{
+  color: white !important;
 }
 .delete-x{
   color: red;

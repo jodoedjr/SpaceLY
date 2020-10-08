@@ -2,7 +2,7 @@
 const db = require("../models");
 const passport = require("../config/passport");
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -34,6 +34,7 @@ module.exports = function(app) {
   app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
+    console.log("redirecting");
   });
 
   // Route for getting some data about our user to be used client side
@@ -51,41 +52,59 @@ module.exports = function(app) {
     }
   });
 
-  app.get("/api/user/:id", (req, res) => {
+  app.get("/api/user", (req, res) => {///api/user/:id", (req, res) => {
     // Here we add an "include" property to our options in our findOne query
     // We set the value to an array of the models we want to include in a left outer join
     // In this case, just db.Post
-    db.User.findOne({
-      where: {
-        id: req.params.id
-      },
-      include: [db.Journal]
-    }).then(dbUser => {
-      res.json(dbUser);
-    });
+    db.Journal.findAll()
+
+
+    // db.User.findOne({
+    //   where: {
+    //     $or: [
+    //       {
+    //         id: req.user.id//req.params.id
+    //       },
+    //       {
+    //         shared: true
+    //       }
+    //     ]
+    //   },
+    //   include: [db.Journal]
+    // }).then(dbUser => {
+    //   res.json(dbUser);
+    // });
   });
 
   //********************************************************
   // Journal APIs
-
-  //get user's/shared journals
+  //get user's journals
   app.get("/api/journal", (req, res) => {
-    //get user's journals and shared journals
-    //setup a query object
-    const query = {};
-    if (req.query.UserId) {
-      query.UserId = req.query.user_id;
-    }
-    query.shared = true;
-    //find all journals by user, or shared with user
+    //find all journals by user
     db.Journal.findAll({
-      where: query,
-      include: [db.User]
+      where: 
+      {
+          UserId: req.user.id
+      }
     }).then(dbJournal => {
       //send results back to front end
       res.json(dbJournal);
     });
   });
+
+    //get shared journals
+    app.get("/api/shared-journals", (req, res) => {
+      //find all journals by user
+      db.Journal.findAll({
+        where: 
+        {
+            shared: true
+        }
+      }).then(dbJournal => {
+        //send results back to front end
+        res.json(dbJournal);
+      });
+    });
 
   //post new journal
   app.post("/api/journal", (req, res) => {
@@ -95,7 +114,7 @@ module.exports = function(app) {
       shared: req.body.shared,
       points: req.body.points,
       color: req.body.color,
-      UserId: req.body.UserId
+      UserId: req.user.id
     })
       .then(result => {
         //res.redirect(307, "/api/login");

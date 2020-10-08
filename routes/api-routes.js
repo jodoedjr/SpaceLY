@@ -34,6 +34,7 @@ module.exports = function(app) {
   app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
+    console.log("redirecting");
   });
 
   // Route for getting some data about our user to be used client side
@@ -49,5 +50,98 @@ module.exports = function(app) {
         id: req.user.id
       });
     }
+  });
+
+  // app.get("/api/user", (req, res) => {///api/user/:id", (req, res) => {
+  //   // Here we add an "include" property to our options in our findOne query
+  //   // We set the value to an array of the models we want to include in a left outer join
+  //   // In this case, just db.Post
+  //   db.Journal.findAll()
+
+  //   // db.User.findOne({
+  //   //   where: {
+  //   //     $or: [
+  //   //       {
+  //   //         id: req.user.id//req.params.id
+  //   //       },
+  //   //       {
+  //   //         shared: true
+  //   //       }
+  //   //     ]
+  //   //   },
+  //   //   include: [db.Journal]
+  //   // }).then(dbUser => {
+  //   //   res.json(dbUser);
+  //   // });
+  // });
+
+  //********************************************************
+  // Journal APIs
+  //get user's journals
+  app.get("/api/journal", (req, res) => {
+    //find all journals by user
+    db.Journal.findAll({
+      where: {
+        UserId: req.user.id
+      }
+    }).then(dbJournal => {
+      //send results back to front end
+      res.json(dbJournal);
+    });
+  });
+
+  //get shared journals
+  app.get("/api/shared-journals", (req, res) => {
+    //find all journals by user
+    db.Journal.findAll({
+      where: {
+        shared: true
+      }
+    }).then(dbJournal => {
+      //send results back to front end
+      res.json(dbJournal);
+    });
+  });
+
+  //post new journal
+  app.post("/api/journal", (req, res) => {
+    //create a Journal table entry with title, shared status, points list, color, and user id
+    db.Journal.create({
+      title: req.body.title,
+      shared: req.body.shared,
+      points: req.body.points,
+      color: req.body.color,
+      UserId: req.user.id
+    })
+      .then(result => {
+        //res.redirect(307, "/api/login");
+        res.json(result);
+      })
+      .catch(err => {
+        res.status(401).json(err);
+      });
+  });
+
+  //delete a journal
+  app.delete("/api/journal/:id", (req, res) => {
+    db.Journal.destroy({
+      // destroy id'ed journal
+      where: {
+        id: req.params.id
+      }
+    }).then(dbJournal => {
+      res.json(dbJournal); // send result back
+    });
+  });
+
+  //update existing journal
+  app.put("/api/journal", (req, res) => {
+    db.Journal.update(req.body, {
+      where: {
+        id: req.body.id
+      }
+    }).then(dbJournal => {
+      res.json(dbJournal);
+    });
   });
 };

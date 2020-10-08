@@ -1,14 +1,6 @@
 $(document).ready(() => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      updatePlanetariumLocation,
-      showErrorGeolocation
-    );
-  } else {
-    // alert user that location isn't available via geolocation
-    alert("Geolocation is not supported by your browser");
-  }
-
+  //*********************************************************************************************
+  ////Login Logic
   //Getting references to our form and inputs
   const userForm = $("form.user");
   const emailInput = $("input#email-input-log");
@@ -44,12 +36,61 @@ $(document).ready(() => {
         console.log(err);
       });
   }
+  //*********************************************************************************************
+  ////Signup Logic
+  // Getting references to our form and input
+  const signUpForm = $("form.signup");
+  const emailInputSign = $("input#email-input-sign");
+  const passwordInputSign = $("input#password-input-sign");
 
-  $("#starmap").click(() => {
-    // if user clicks starmap - close nav drawer
-    closeNav();
+  // When the signup button is clicked, we validate the email and password are not blank
+  signUpForm.on("submit", event => {
+    event.preventDefault();
+    const userData = {
+      email: emailInputSign.val().trim(),
+      password: passwordInputSign.val().trim()
+    };
+
+    if (!userData.email || !userData.password) {
+      return;
+    }
+    // If we have an email and password, run the signUpUser function
+    signUpUser(userData.email, userData.password);
+    emailInputSign.val("");
+    passwordInputSign.val("");
   });
 
+  // Does a post to the signup route. If successful, we are redirected to the members page
+  // Otherwise we log any errors
+  function signUpUser(email, password) {
+    $.post("/api/signup", {
+      email: email,
+      password: password
+    })
+      .then(() => {
+        window.location.replace("/members");
+        // If there's an error, handle it by throwing up a bootstrap alert
+      })
+      .catch(handleLoginErr);
+  }
+
+  function handleLoginErr(err) {
+    $("#alert .msg").text(err.responseJSON);
+    $("#alert").fadeIn(500);
+  }
+  //*********************************************************************************************
+  ////Update user location, if possible
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      updatePlanetariumLocation,
+      showErrorGeolocation
+    );
+  } else {
+    // alert user that location isn't available via geolocation
+    alert("Geolocation is not supported by your browser");
+  }
+  //*********************************************************************************************
+  //// Control Nav Drawer
   $(".panel-collapse").on("show.bs.collapse", function() {
     // un-collapse nav drawer sections
     $(this)
@@ -64,6 +105,12 @@ $(document).ready(() => {
       .removeClass("active");
   });
 
+  $("#starmap").click(() => {
+    // if user clicks starmap - close nav drawer
+    closeNav();
+  });
+  //*********************************************************************************************
+  //// Handle Nav Drawer Clicks
   $("#mySidenav").click(event => {
     // click handler for nav drawer functions
     const tar = event.target;
@@ -101,12 +148,11 @@ $(document).ready(() => {
     }
   });
 });
-
+//*********************************************************************************************
+////Update planetarium location
 function updatePlanetariumLocation(data) {
   openNav();
   closeNav();
-  //let planetarium = null;
-  //planetarium =
   S.virtualsky({
     id: "starmap", // This should match the ID used in the DOM
     projection: "stereo",
@@ -114,7 +160,7 @@ function updatePlanetariumLocation(data) {
     longitude: data.coords.longitude
   });
 }
-
+////Show geolocation errors
 function showErrorGeolocation(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -131,52 +177,13 @@ function showErrorGeolocation(error) {
       break;
   }
 }
-
+//*********************************************************************************************
+////Open and close the nav drawer
 /* Set the width of the side navigation to Xpx */
 function openNav() {
   document.getElementById("mySidenav").style.width = "350px";
 }
-
 /* Set the width of the side navigation to 0 */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
-// $(document).ready(() => {
-//   // Getting references to our form and inputs
-//   const loginForm = $("form.login");
-//   const emailInput = $("input#email-input");
-//   const passwordInput = $("input#password-input");
-
-//   // When the form is submitted, we validate there's an email and password entered
-//   loginForm.on("submit", event => {
-//     event.preventDefault();
-//     const userData = {
-//       email: emailInput.val().trim(),
-//       password: passwordInput.val().trim()
-//     };
-
-//     if (!userData.email || !userData.password) {
-//       return;
-//     }
-
-//     // If we have an email and password we run the loginUser function and clear the form
-//     loginUser(userData.email, userData.password);
-//     emailInput.val("");
-//     passwordInput.val("");
-//   });
-
-//   // loginUser does a post to our "api/login" route and if successful, redirects us the the members page
-//   function loginUser(email, password) {
-//     $.post("/api/login", {
-//       email: email,
-//       password: password
-//     })
-//       .then(() => {
-//         window.location.replace("/members");
-//         // If there's an error, log the error
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   }
-// });

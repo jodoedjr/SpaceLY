@@ -64,20 +64,38 @@ ul.no-bullets {
 
 ul li:hover{ 
   /* ,ul li.active */
-  color: yellow;
+  /* color: yellow; */
 }
-
 .showList{
-  color: gold;
+  /* color: gold; */
 }
-
+.noShowList{
+  color: white !important;
+}
 .delete-x{
   color: red;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.delete-x:hover{
+  color: salmon;
 }
 .share-arrow{
-  color:cyan;
+  color:blue;
+  margin-left: 2px;
+  margin-right: 2px;
 }
-
+.share-arrow:hover{
+color:cyan;
+}
+.add-square{
+  color:green;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.add-square:hover{
+  color: lightgreen;
+}
 #add-journal{
   color: green;
 }

@@ -194,6 +194,7 @@ journalForm.on("submit", event => {
 });
 
 //add more points to journal
+
 // $("#journal-add-point").on("click", () => {});
 
 //*********************************************************************************************

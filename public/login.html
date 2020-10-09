@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Passport Authentication</title>
+    <title>SpaceLY</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -75,12 +75,7 @@
                 </div>
                 <button type="submit" class="btn btn-sidenav">Login</button>
               </form>
-              <a
-                id="logout"
-                class="navbar-brand"
-                style="display:none;"
-                href="/logout"
-              >
+              <a id="logout" class="navbar-brand" style="display:none;" href="/logout">
                 Logout
               </a>
             </div>
@@ -148,7 +143,7 @@
         </div>
 
         <!-- SHARED JOURNALS SECTION! -->
-        <div class="panel panel-default journal-section">
+        <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
               <a
@@ -171,13 +166,13 @@
             aria-labelledby="headingThree"
           >
             <div class="panel-body">
-              <ul id="shared-journal-list" class="no-bullets"></ul>
+              <h5>Coming Soon!</h5>
             </div>
           </div>
         </div>
 
         <!-- VIEWER PREFERENCES SECTION -->
-        <div class="panel panel-default" style="display:none">
+        <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="headingFour">
             <h4 class="panel-title">
               <a
@@ -338,12 +333,7 @@
               <button type="submit" id="savePrefs" class="btn btn-warning">
                 Show
               </button>
-              <button
-                type="submit"
-                id="savePrefs"
-                class="btn btn-success"
-                disabled
-              >
+              <button type="submit" id="savePrefs" class="btn btn-success" disabled>
                 Save
               </button>
             </div>
@@ -358,7 +348,7 @@
         <a class="navbar-brand" onclick="openNav()" href="#"
           >Nameless Reaches
         </a>
-        <!-- <button
+        <button
           class="navbar-toggler"
           type="button"
           data-toggle="collapse"
@@ -382,7 +372,7 @@
               Search
             </button>
           </form>
-        </div> -->
+        </div>
       </nav>
 
       <div id="starmap" style="height: 94vh;"></div>

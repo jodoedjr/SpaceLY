@@ -6,14 +6,6 @@ let activeJournals;
 //let activeSharedJournals;
 
 $(document).ready(() => {
-  // This file just does a GET request to figure out which user is logged in
-  // and updates the HTML on the page
-  // $.get("/api/user_data").then(data => {
-  //   user = data;
-  //   console.log(user);
-  //   $(".member-name").text(data.email);
-  // });
-
   initPage();
 
   //*********************************************************************************************
@@ -55,8 +47,8 @@ $(document).ready(() => {
     const tar = event.target;
 
     //My Journal Section & Shared Journals Section
+    //if user clicks on a journal title
     if (tar.hasAttribute("data-journal-id")) {
-      console.log(tar);
       // if target has data-listName property
       if (tar.classList.contains("showList")) {
         const journalId = tar.getAttribute("data-journal-id");
@@ -100,44 +92,51 @@ $(document).ready(() => {
           //render active journal points
           renderJournalPoints();
         }
-        // const array = [
-        //   {
-        //     ra: 10.68458333,
-        //     dec: 41.26916667,
-        //     label: "M31 Andromeda Galaxy",
-        //     color: "rgb(255, 220, 220)"
-        //   },
-        //   {
-        //     ra: 23.45841667,
-        //     dec: 30.66019444,
-        //     label: "Triangulum Galaxy",
-        //     color: "rgb(255, 220, 220)"
-        //   },
-        //   {
-        //     ra: 201.365,
-        //     dec: 43.01916667,
-        //     label: "Centarus A",
-        //     color: "rgb(255, 220, 220)"
-        //   },
-        //   {
-        //     ra: 148.8883333,
-        //     dec: 69.06527778,
-        //     label: "Bode's Galaxy",
-        //     color: "rgb(255, 220, 220)"
-        //   },
-        //   {
-        //     ra: 11.8875,
-        //     dec: -25.28833333,
-        //     label: "Sculptor Galaxy",
-        //     color: "rgb(255, 220, 220)"
-        //   }
-        // ];
-        // updatePlanetariumPointers(array);
       }
     }
+    //if user clicks on the red delete x next to a journal title
+    if (tar.hasAttribute("data-journal-delete-id")) {
+      $("#delete-journal-name").text(tar.getAttribute("data-journal-name"));
+      $("#delete-journal-confirm").attr(
+        "data-journal-delete-id",
+        tar.getAttribute("data-journal-delete-id")
+      );
+      $("#delete-journal-modal").modal();
+    }
+
+    //edit journal when the green plus is clicked
+    if (tar.hasAttribute("data-journal-edit-id")) {
+      const jId = tar.getAttribute("data-journal-edit-id");
+      const updateJournal = journals.find(
+        element => element.id.toString() === jId
+      );
+      populateJournalEdit(updateJournal);
+    }
+  });
+
+  //delete journal if confirmed
+  $("#delete-journal-confirm").click(event => {
+    if (event.target.hasAttribute("data-journal-delete-id")) {
+      $.ajax({
+        method: "DELETE",
+        url:
+          "/api/journal/" + event.target.getAttribute("data-journal-delete-id")
+      })
+        .then(() => {
+          initPage();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    $("#delete-journal-name").text("");
+    $("#delete-journal-confirm").removeAttr("data-journal-delete-id");
+    $("#delete-journal-modal").modal("hide");
   });
 });
-
+//
+//*********************************************************************************************
+////Initialize page and journals
 function initPage() {
   openNav();
   closeNav();
@@ -155,48 +154,8 @@ function initPage() {
   //sharedJournals;//= JSON.parse(localStorage.getItem("sharedJournals"));
   getUserJournals();
   getSharedJournals();
+  clearJournalForm();
 }
-
-//*********************************************************************************************
-////Handle Journal Add
-//let numberPointsShown = 1;
-const journalForm = $("form.journal");
-journalForm.on("submit", event => {
-  event.preventDefault();
-  const pointObject = {};
-  $("#point-list")
-    .find("input")
-    .each((index, element) => {
-      pointObject[$(element).attr("id")] = $(element).val();
-    });
-  const journalData = {
-    title: $("input#journal-name-input")
-      .val()
-      .trim(),
-    shared: $("input#shared-check").is(":checked"),
-    points: JSON.stringify(pointObject),
-    color: $("input#journal-color").val()
-    //UserId: user.id
-  };
-  if (!journalData.title || !journalData) {
-    return;
-  }
-
-  $.post("/api/journal", journalData)
-    .then(() => {
-      $("#JournalModalCenter").modal("hide");
-      getUserJournals();
-      getSharedJournals();
-    })
-    .catch(err => {
-      console.log(err);
-      alert("SERVER ERROR ON POST");
-    });
-});
-
-//add more points to journal
-
-// $("#journal-add-point").on("click", () => {});
 
 //*********************************************************************************************
 ////Get Journal data
@@ -215,10 +174,10 @@ function getUserJournals() {
       }
       journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
-      <i class="fas fa-plus-square add-square"></i
-      ><i class="fas fa-share-square share-arrow"></i
-      ><i data-journal-delete-id="${element.id}" class="far fa-times-circle delete-x"></i>
+      <i data-journal-edit-id="${element.id}" class="fas fa-plus-square add-square"></i>
+      <i data-journal-delete-id="${element.id}" data-journal-name="${element.title}" class="far fa-times-circle delete-x"></i>
       </li>`;
+      // <i class="fas fa-share-square share-arrow"></i>
       journalList.append(journalHTML);
     });
     renderJournalPoints();
@@ -288,6 +247,97 @@ function getSharedJournals() {
 // }
 
 //*********************************************************************************************
+////Populate data on journal edit modal
+function populateJournalEdit(journalData) {
+  //add journal name, shared, color, and point data to journal edit modal
+  journalForm.attr("data-update", journalData.id);
+  $("input#journal-name-input").val(journalData.title);
+  $("input#shared-check").prop("checked", journalData.shared);
+  $("input#journal-color").val(journalData.color);
+  const pointData = JSON.parse(journalData.points);
+  //destringify point data;
+  $("#point-list")
+    //stick the appropriate attributes in their matched inputs
+    .find("input")
+    .each((index, element) => {
+      $(element).val(pointData[$(element).attr("id")]);
+    });
+  $("#JournalModalCenter").modal("show");
+}
+
+//*********************************************************************************************
+////Handle Journal Add/Save - POST and PUT requests for Journals
+//let numberPointsShown = 1;
+const journalForm = $("form.journal");
+journalForm.on("submit", event => {
+  //journal modal form submit
+  event.preventDefault();
+  const pointObject = {};
+  $("#point-list")
+    .find("input")
+    .each((index, element) => {
+      pointObject[$(element).attr("id")] = $(element).val();
+    });
+  const journalData = {
+    //create object with user form data
+    title: $("input#journal-name-input")
+      .val()
+      .trim(),
+    shared: $("input#shared-check").is(":checked"),
+    points: JSON.stringify(pointObject),
+    color: $("input#journal-color").val()
+    //UserId: user.id
+  };
+  if (!journalData.title || !journalData) {
+    return;
+  }
+  if (journalForm.attr("data-update") === "false") {
+    //if journalForm data update attribute is false - its a new journal - post it
+    $.post("/api/journal", journalData)
+      .then(() => {
+        $("#JournalModalCenter").modal("hide");
+        getUserJournals();
+        getSharedJournals();
+      })
+      .catch(err => {
+        console.log(err);
+        alert("SERVER ERROR ON POST");
+      });
+  }
+  if (parseInt(journalForm.attr("data-update")) > -1) {
+    //if journalForm data update attr is true - its an existing journal - put it
+    journalData.id = parseInt(journalForm.attr("data-update"));
+    $.ajax({
+      method: "PUT",
+      url: "/api/journal",
+      data: journalData
+    })
+      .then(() => {
+        $("#JournalModalCenter").modal("hide");
+        reRenderPlanetarium();
+        getUserJournals();
+        getSharedJournals();
+      })
+      .catch(err => {
+        console.log(err);
+        alert("SERVER ERROR ON PUT");
+      });
+  }
+  journalForm.attr("data-update", "false");
+  //remove the update journal id number
+  journalForm.trigger("reset");
+  //reset the form fields when finished
+});
+
+function clearJournalForm() {
+  journalForm.trigger("reset");
+}
+
+//add more points to journal
+
+// $("#journal-add-point").on("click", () => {});
+
+//*********************************************************************************************
 ////Update planetarium location
 
 function updatePlanetariumLocation(data) {
@@ -328,6 +378,7 @@ function updatePlanetariumPointers(data) {
     }
   }
 }
+
 const hexToRGB = hex => {
   const rgbArray = hex
     .replace(
@@ -367,3 +418,37 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
+
+// const array = [
+//   {
+//     ra: 10.68458333,
+//     dec: 41.26916667,
+//     label: "M31 Andromeda Galaxy",
+//     color: "rgb(255, 220, 220)"
+//   },
+//   {
+//     ra: 23.45841667,
+//     dec: 30.66019444,
+//     label: "Triangulum Galaxy",
+//     color: "rgb(255, 220, 220)"
+//   },
+//   {
+//     ra: 201.365,
+//     dec: 43.01916667,
+//     label: "Centarus A",
+//     color: "rgb(255, 220, 220)"
+//   },
+//   {
+//     ra: 148.8883333,
+//     dec: 69.06527778,
+//     label: "Bode's Galaxy",
+//     color: "rgb(255, 220, 220)"
+//   },
+//   {
+//     ra: 11.8875,
+//     dec: -25.28833333,
+//     label: "Sculptor Galaxy",
+//     color: "rgb(255, 220, 220)"
+//   }
+// ];
+// updatePlanetariumPointers(array);

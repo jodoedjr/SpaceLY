@@ -13,7 +13,9 @@ body {
   /* background-color: #111; */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  transition: all 0.5s ease 0s; /* 0.5 second transition effect to slide in the sidenav */
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* The navigation menu links */
@@ -104,10 +106,10 @@ color:cyan;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-#main {
+/* #main {
   transition: margin-left .25s;
   padding: 20px;
-}
+} */
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {

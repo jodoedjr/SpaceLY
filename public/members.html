@@ -90,6 +90,7 @@
                 style="font-size: 20px;"
                 data-toggle="modal"
                 data-target="#JournalModalCenter"
+                onclick="clearJournalForm()"
                 ><i class="fas fa-plus-square"></i> Add Journal</span
               >
               <ul id="journal-list" class="no-bullets">
@@ -327,7 +328,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form class="journal" style="padding-top: 10px;">
+            <form class="journal" data-update=false style="padding-top: 10px;">
               <div id="journal-form-group" class="form-group">
                 <input
                   type="textarea"
@@ -369,18 +370,21 @@
                   placeholder="1: Declination Degrees"
                 />
                 <input
+                style="display:none"
                   type="textarea"
                   class="form-control"
                   id="point-2-name"
                   placeholder="2: Name"
                 />
                 <input
+                style="display:none"
                   type="textarea"
                   class="form-control"
                   id="point-2-ra"
                   placeholder="2: Right Ascension Degrees"
                 />
                 <input
+                style="display:none"
                   type="textarea"
                   class="form-control"
                   id="point-2-dec"
@@ -477,6 +481,30 @@
         </div>
       </div>
     </div>
+<!-- confirm journal delete modal -->
+    <div class="modal fade" id="delete-journal-modal" tabindex="-1" role="dialog" aria-labelledby="deleteJournalModal" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:#475059;">
+          <p style="margin:auto;padding-top: 15px;color:black;">Delete <span id="delete-journal-name"></span>?</p>
+        </br>
+        <button
+          type="submit"
+          id="delete-journal-confirm"
+          class="btn btn-danger"
+        >
+          Delete
+        </button>
+        <button
+          type="cancel"
+          id="delete-journal-cancel"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        </div>
+      </div>
+    </div>
 
     <div style="position: relative">
       <span onclick="openNav()" style="height: 1vh; display: none;">open</span>
@@ -484,7 +512,7 @@
         <a class="navbar-brand" onclick="openNav()" href="#"
           >Nameless Reaches
         </a>
-        <button
+        <!-- <button
           class="navbar-toggler"
           type="button"
           data-toggle="collapse"
@@ -492,9 +520,9 @@
           aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
-        </button>
+        </button> -->
 
-        <div
+        <!-- <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarTogglerDemo02"
         >
@@ -508,7 +536,7 @@
               Search
             </button>
           </form>
-        </div>
+        </div> -->
       </nav>
 
       <div id="starmap" style="height: 94vh;"></div>

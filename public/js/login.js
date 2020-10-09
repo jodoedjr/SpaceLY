@@ -2,7 +2,7 @@ let geoData;
 let planetarium;
 let activeJournals;
 $(document).ready(() => {
-  //initPage();
+  initPage();
   //*********************************************************************************************
   ////Login Logic
   //Getting references to our form and inputs
@@ -116,8 +116,8 @@ $(document).ready(() => {
   });
   //*********************************************************************************************
   //// Handle Nav Drawer Clicks
-   $(".journal-section").click(event => {
-     event.preventDefault();
+  $(".journal-section").click(event => {
+    event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
 
@@ -168,7 +168,7 @@ $(document).ready(() => {
         }
       }
     }
-   });
+  });
 });
 
 function initPage() {

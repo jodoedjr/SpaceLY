@@ -28,7 +28,7 @@ The login page:
 ![Login Page, No open Items](https://github.com/jodoedjr/SpaceLY/blob/master/assets/login.png "Login Page")
 
 Set Time:
-![Login Page, Set Time](https://github.com/jodoedjr/SpaceLY/blob/master/assets/dateAndTime.png "Login Page - Set Time Popup")
+![Login Page, Set Time](https://https://github.com/jodoedjr/SpaceLY/blob/master/assets/dataAndTime.png "Login Page - Set Time Popup")
 
 Keyboard Shortcuts:
 ![Login Page, Keyboard Shortcuts](https://github.com/jodoedjr/SpaceLY/blob/master/assets/login-keyboard.png "Login Page - Keyboard Shortcuts Popup")

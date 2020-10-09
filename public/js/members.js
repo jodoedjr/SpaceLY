@@ -194,8 +194,8 @@ journalForm.on("submit", event => {
 });
 
 //add more points to journal
-// $("#journal-add-point").on("click", () => {
-// });
+
+// $("#journal-add-point").on("click", () => {});
 
 //*********************************************************************************************
 ////Get Journal data
@@ -209,8 +209,8 @@ function getUserJournals() {
       let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`;
       if (activeJournals.indexOf(String(element.id)) === -1) {
         // if this journal is not active, add the noShowList class
-        const className = "noShowList";
-        journalHTML += ` class=${className}`;
+        journalHTML += ` 
+        class="noShowList"`;
       }
       journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
@@ -229,7 +229,9 @@ function renderJournalPoints() {
     //if activeJournals are stored in local storage
     const activeJournalsData = [];
     activeJournals.forEach((journalId, indexAJ) => {
-      const found = journals.find(journal => journalId === journal.id);
+      const found = journals.find(
+        journal => journalId === journal.id.toString()
+      );
       if (found) {
         activeJournalsData.push(found);
       } else {
@@ -254,8 +256,8 @@ function getSharedJournals() {
       let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`;
       if (activeJournals.indexOf(String(element.id)) === -1) {
         // if this journal is not active, add the noShowList class
-        const className = "noShowList";
-        journalHTML += ` class=${className}`;
+        journalHTML += ` 
+        class="noShowList"`;
       }
       journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
@@ -271,9 +273,9 @@ function getSharedJournals() {
 // function renderSharedJournalPoints() {
 //   if (activeSharedJournals !== null) {
 //     //if activeJournals are stored in local storage
-//     let activeJournalsData = [];
+//     const activeJournalsData = [];
 //     activeSharedJournals.forEach((journalId, indexAJ) => {
-//       let found = journals.find(journal => journalId == journal.id);
+//       const found = journals.find(journal => journalId == journal.id);
 //       if (found) {
 //         activeJournalsData.push(found);
 //       } else {

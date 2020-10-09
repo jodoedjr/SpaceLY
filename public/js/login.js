@@ -12,7 +12,6 @@ $(document).ready(() => {
 
   // When the form is submitted, we validate there's an email and password entered
   userForm.on("submit", event => {
-    console.log("SUBMIT!");
     event.preventDefault();
     const userData = {
       email: emailInput.val().trim(),
@@ -120,7 +119,6 @@ $(document).ready(() => {
     event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
-
     //My Journal Section & Shared Journals Section
     if (tar.hasAttribute("data-journal-id")) {
       // if target has data-listName property

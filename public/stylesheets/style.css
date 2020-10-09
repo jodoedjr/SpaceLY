@@ -2,6 +2,9 @@ body {
   background-color: black;
 }
 
+#starmap{
+  height: calc(100vh - 56px);
+}
 /* The side navigation menu */
 .sidenav {
   height: 100%; /* 100% Full-height */

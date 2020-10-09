@@ -49,13 +49,14 @@ $(document).ready(() => {
   });
   //*********************************************************************************************
   //// Handle Nav Drawer Clicks
-  $("#mySidenav").click(event => {
+  $(".journal-section").click(event => {
     event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
 
     //My Journal Section & Shared Journals Section
     if (tar.hasAttribute("data-journal-id")) {
+      console.log(tar);
       // if target has data-listName property
       if (tar.classList.contains("showList")) {
         const journalId = tar.getAttribute("data-journal-id");
@@ -216,7 +217,7 @@ function getUserJournals() {
       ${element.title}
       <i class="fas fa-plus-square add-square"></i
       ><i class="fas fa-share-square share-arrow"></i
-      ><i class="far fa-times-circle delete-x"></i>
+      ><i data-journal-delete-id="${element.id}" class="far fa-times-circle delete-x"></i>
       </li>`;
       journalList.append(journalHTML);
     });
@@ -261,9 +262,6 @@ function getSharedJournals() {
       }
       journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
-      <i class="fas fa-plus-square add-square"></i
-      ><i class="fas fa-share-square share-arrow"></i
-      ><i class="far fa-times-circle delete-x"></i>
       </li>`;
       sharedJournalList.append(journalHTML);
     });

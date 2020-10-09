@@ -75,7 +75,12 @@
                 </div>
                 <button type="submit" class="btn btn-sidenav">Login</button>
               </form>
-              <a id="logout" class="navbar-brand" style="display:none;" href="/logout">
+              <a
+                id="logout"
+                class="navbar-brand"
+                style="display:none;"
+                href="/logout"
+              >
                 Logout
               </a>
             </div>
@@ -143,7 +148,7 @@
         </div>
 
         <!-- SHARED JOURNALS SECTION! -->
-        <div class="panel panel-default">
+        <div class="panel panel-default journal-section">
           <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
               <a
@@ -166,14 +171,13 @@
             aria-labelledby="headingThree"
           >
             <div class="panel-body">
-              <ul id="shared-journal-list" class="no-bullets">
-              </ul>
+              <ul id="shared-journal-list" class="no-bullets"></ul>
             </div>
           </div>
         </div>
 
         <!-- VIEWER PREFERENCES SECTION -->
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="display:none">
           <div class="panel-heading" role="tab" id="headingFour">
             <h4 class="panel-title">
               <a
@@ -334,7 +338,12 @@
               <button type="submit" id="savePrefs" class="btn btn-warning">
                 Show
               </button>
-              <button type="submit" id="savePrefs" class="btn btn-success" disabled>
+              <button
+                type="submit"
+                id="savePrefs"
+                class="btn btn-success"
+                disabled
+              >
                 Save
               </button>
             </div>

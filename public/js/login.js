@@ -2,8 +2,7 @@ let geoData;
 let planetarium;
 let activeJournals;
 $(document).ready(() => {
-  initPage();
-
+  //initPage();
   //*********************************************************************************************
   ////Login Logic
   //Getting references to our form and inputs
@@ -13,6 +12,7 @@ $(document).ready(() => {
 
   // When the form is submitted, we validate there's an email and password entered
   userForm.on("submit", event => {
+    console.log("SUBMIT!");
     event.preventDefault();
     const userData = {
       email: emailInput.val().trim(),
@@ -116,8 +116,8 @@ $(document).ready(() => {
   });
   //*********************************************************************************************
   //// Handle Nav Drawer Clicks
-  $("#mySidenav").click(event => {
-    event.preventDefault();
+   $(".journal-section").click(event => {
+     event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
 
@@ -168,7 +168,7 @@ $(document).ready(() => {
         }
       }
     }
-  });
+   });
 });
 
 function initPage() {
@@ -209,9 +209,6 @@ function getSharedJournals() {
       }
       journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
-      <i class="fas fa-plus-square add-square"></i
-      ><i class="fas fa-share-square share-arrow"></i
-      ><i class="far fa-times-circle delete-x"></i>
       </li>`;
       sharedJournalList.append(journalHTML);
     });

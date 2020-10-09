@@ -14,8 +14,7 @@ $(document).ready(() => {
   //   $(".member-name").text(data.email);
   // });
 
-  init_page();
-
+  initPage();
 
   //*********************************************************************************************
   ////Update user location, if possible
@@ -59,35 +58,44 @@ $(document).ready(() => {
     if (tar.hasAttribute("data-journal-id")) {
       // if target has data-listName property
       if (tar.classList.contains("showList")) {
-        let journalId = tar.getAttribute("data-journal-id")
-        $(`*[data-journal-id=${journalId}]`)
-          .each((index, element) => {
-            element.classList.remove("showList");
-            element.classList.add("noShowList");
-          });
+        const journalId = tar.getAttribute("data-journal-id");
+        $(`*[data-journal-id=${journalId}]`).each((index, element) => {
+          element.classList.remove("showList");
+          element.classList.add("noShowList");
+        });
         //add code to update star canvas - hide items in this list
         // if data-journal-id exists in activeJournals - remove it and re-render page
         if (activeJournals.indexOf(tar.getAttribute("data-journal-id")) > -1) {
-          activeJournals.splice(activeJournals.indexOf(tar.getAttribute("data-journal-id")), 1);
+          activeJournals.splice(
+            activeJournals.indexOf(tar.getAttribute("data-journal-id")),
+            1
+          );
           //save active journals to local storage
-          localStorage.setItem("activeJournals", JSON.stringify(activeJournals));
+          localStorage.setItem(
+            "activeJournals",
+            JSON.stringify(activeJournals)
+          );
           //render active journal points
           reRenderPlanetarium();
           renderJournalPoints();
         }
       } else {
-        let journalId = tar.getAttribute("data-journal-id")
-        $(`*[data-journal-id=${journalId}]`)
-          .each((index, element) => {
-            element.classList.add("showList");
-            element.classList.remove("noShowList");
-          });
+        const journalId = tar.getAttribute("data-journal-id");
+        $(`*[data-journal-id=${journalId}]`).each((index, element) => {
+          element.classList.add("showList");
+          element.classList.remove("noShowList");
+        });
         //add code to update star canvas - show items in this list
         //if activeJournals does not contain this journal id, add it
-        if (activeJournals.indexOf(tar.getAttribute("data-journal-id")) === -1) {
+        if (
+          activeJournals.indexOf(tar.getAttribute("data-journal-id")) === -1
+        ) {
           activeJournals.push(tar.getAttribute("data-journal-id"));
           //save active journals to local storage
-          localStorage.setItem("activeJournals", JSON.stringify(activeJournals));
+          localStorage.setItem(
+            "activeJournals",
+            JSON.stringify(activeJournals)
+          );
           //render active journal points
           renderJournalPoints();
         }
@@ -129,13 +137,16 @@ $(document).ready(() => {
   });
 });
 
-
-function init_page() {
+function initPage() {
+  openNav();
+  closeNav();
   activeJournals = JSON.parse(localStorage.getItem("activeJournals"));
   if (activeJournals === null) {
     activeJournals = [];
   }
-  activeSharedJournals = JSON.parse(localStorage.getItem("activeSharedJournals"));
+  activeSharedJournals = JSON.parse(
+    localStorage.getItem("activeSharedJournals")
+  );
   if (activeSharedJournals === null) {
     activeSharedJournals = [];
   }
@@ -144,8 +155,6 @@ function init_page() {
   getUserJournals();
   getSharedJournals();
 }
-
-
 
 //*********************************************************************************************
 ////Handle Journal Add
@@ -165,7 +174,7 @@ journalForm.on("submit", event => {
       .trim(),
     shared: $("input#shared-check").is(":checked"),
     points: JSON.stringify(pointObject),
-    color: $("input#journal-color").val(),
+    color: $("input#journal-color").val()
     //UserId: user.id
   };
   if (!journalData.title || !journalData) {
@@ -173,9 +182,9 @@ journalForm.on("submit", event => {
   }
 
   $.post("/api/journal", journalData)
-    .then(res => {
+    .then(() => {
       $("#JournalModalCenter").modal("hide");
-      getUserJournals()
+      getUserJournals();
       getSharedJournals();
     })
     .catch(err => {
@@ -185,29 +194,29 @@ journalForm.on("submit", event => {
 });
 
 //add more points to journal
-$("#journal-add-point").on("click", () => {
-});
+// $("#journal-add-point").on("click", () => {});
 
 //*********************************************************************************************
 ////Get Journal data
-const journalList = $("#journal-list") //ul element that holders journals
+const journalList = $("#journal-list"); //ul element that holders journals
 function getUserJournals() {
   $.get("/api/journal", data => {
     //render and populate user's journals
     journals = data; // save journal data for rendering functions
     journalList.empty(); // empty list of journals
     data.forEach(element => {
-      let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`
-      if (activeJournals.indexOf(String(element.id)) == -1) {
+      let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`;
+      if (activeJournals.indexOf(String(element.id)) === -1) {
         // if this journal is not active, add the noShowList class
-        journalHTML += ` class="noShowList`;
+        journalHTML += ` 
+        class="noShowList"`;
       }
-      journalHTML += `" data-listName="${element.title}" data-journal-id="${element.id}">
+      journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
       <i class="fas fa-plus-square add-square"></i
       ><i class="fas fa-share-square share-arrow"></i
       ><i class="far fa-times-circle delete-x"></i>
-      </li>`
+      </li>`;
       journalList.append(journalHTML);
     });
     renderJournalPoints();
@@ -217,9 +226,11 @@ function getUserJournals() {
 function renderJournalPoints() {
   if (activeJournals !== null) {
     //if activeJournals are stored in local storage
-    let activeJournalsData = [];
+    const activeJournalsData = [];
     activeJournals.forEach((journalId, indexAJ) => {
-      let found = journals.find(journal => journalId == journal.id);
+      const found = journals.find(
+        journal => journalId === journal.id.toString()
+      );
       if (found) {
         activeJournalsData.push(found);
       } else {
@@ -238,43 +249,44 @@ const sharedJournalList = $("#shared-journal-list");
 function getSharedJournals() {
   $.get("/api/shared-journals", data => {
     //render and populate shared journals
-    sharedJournals = data;// save journal data for rendering functions
+    sharedJournals = data; // save journal data for rendering functions
     sharedJournalList.empty(); // empty list of journals
     data.forEach(element => {
-      let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`
-      if (activeJournals.indexOf(String(element.id)) == -1) {
+      let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`;
+      if (activeJournals.indexOf(String(element.id)) === -1) {
         // if this journal is not active, add the noShowList class
-        journalHTML += ` class="noShowList`;
+        journalHTML += ` 
+        class="noShowList"`;
       }
-      journalHTML += `" data-listName="${element.title}" data-journal-id="${element.id}">
+      journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
       ${element.title}
       <i class="fas fa-plus-square add-square"></i
       ><i class="fas fa-share-square share-arrow"></i
       ><i class="far fa-times-circle delete-x"></i>
-      </li>`
+      </li>`;
       sharedJournalList.append(journalHTML);
     });
   });
 }
 
-function renderSharedJournalPoints() {
-  if (activeSharedJournals !== null) {
-    //if activeJournals are stored in local storage
-    let activeJournalsData = [];
-    activeSharedJournals.forEach((journalId, indexAJ) => {
-      let found = journals.find(journal => journalId == journal.id);
-      if (found) {
-        activeJournalsData.push(found);
-      } else {
-        // matching id not found - remove from active journals
-        activeSharedJournals.splice(indexAJ, 1);
-      }
-    });
-    activeJournalsData.forEach(journalData => {
-      updatePlanetariumPointers(journalData);
-    });
-  }
-}
+// function renderSharedJournalPoints() {
+//   if (activeSharedJournals !== null) {
+//     //if activeJournals are stored in local storage
+//     const activeJournalsData = [];
+//     activeSharedJournals.forEach((journalId, indexAJ) => {
+//       const found = journals.find(journal => journalId == journal.id);
+//       if (found) {
+//         activeJournalsData.push(found);
+//       } else {
+//         // matching id not found - remove from active journals
+//         activeSharedJournals.splice(indexAJ, 1);
+//       }
+//     });
+//     activeJournalsData.forEach(journalData => {
+//       updatePlanetariumPointers(journalData);
+//     });
+//   }
+// }
 
 //*********************************************************************************************
 ////Update planetarium location
@@ -290,7 +302,7 @@ function updatePlanetariumLocation(data) {
 }
 
 function reRenderPlanetarium() {
-  let data = geoData;
+  const data = geoData;
   planetarium = S.virtualsky({
     id: "starmap", // This should match the ID used in the DOM
     projection: "stereo",
@@ -318,12 +330,16 @@ function updatePlanetariumPointers(data) {
   }
 }
 const hexToRGB = hex => {
-  let rgbArray = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
-    , (m, r, g, b) => '#' + r + r + g + g + b + b)
-    .substring(1).match(/.{2}/g)
-    .map(x => parseInt(x, 16))
-  return `rgb(${rgbArray.join()})`
-}
+  const rgbArray = hex
+    .replace(
+      /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+      (m, r, g, b) => "#" + r + r + g + g + b + b
+    )
+    .substring(1)
+    .match(/.{2}/g)
+    .map(x => parseInt(x, 16));
+  return `rgb(${rgbArray.join()})`;
+};
 
 function showErrorGeolocation(error) {
   switch (error.code) {

@@ -1,4 +1,9 @@
+let geoData;
+let planetarium;
+let activeJournals;
 $(document).ready(() => {
+  initPage();
+
   //*********************************************************************************************
   ////Login Logic
   //Getting references to our form and inputs
@@ -112,55 +117,182 @@ $(document).ready(() => {
   //*********************************************************************************************
   //// Handle Nav Drawer Clicks
   $("#mySidenav").click(event => {
+    event.preventDefault();
     // click handler for nav drawer functions
     const tar = event.target;
 
-    //My Journal Section
-    if (tar.hasAttribute("data-listName")) {
+    //My Journal Section & Shared Journals Section
+    if (tar.hasAttribute("data-journal-id")) {
       // if target has data-listName property
       if (tar.classList.contains("showList")) {
-        tar.classList.remove("showList");
+        const journalId = tar.getAttribute("data-journal-id");
+        $(`*[data-journal-id=${journalId}]`).each((index, element) => {
+          element.classList.remove("showList");
+          element.classList.add("noShowList");
+        });
         //add code to update star canvas - hide items in this list
+        // if data-journal-id exists in activeJournals - remove it and re-render page
+        if (activeJournals.indexOf(tar.getAttribute("data-journal-id")) > -1) {
+          activeJournals.splice(
+            activeJournals.indexOf(tar.getAttribute("data-journal-id")),
+            1
+          );
+          //save active journals to local storage
+          localStorage.setItem(
+            "activeJournals",
+            JSON.stringify(activeJournals)
+          );
+          //render active journal points
+          reRenderPlanetarium();
+          renderJournalPoints();
+        }
       } else {
-        tar.classList.add("showList");
+        const journalId = tar.getAttribute("data-journal-id");
+        $(`*[data-journal-id=${journalId}]`).each((index, element) => {
+          element.classList.add("showList");
+          element.classList.remove("noShowList");
+        });
         //add code to update star canvas - show items in this list
+        //if activeJournals does not contain this journal id, add it
+        if (
+          activeJournals.indexOf(tar.getAttribute("data-journal-id")) === -1
+        ) {
+          activeJournals.push(tar.getAttribute("data-journal-id"));
+          //save active journals to local storage
+          localStorage.setItem(
+            "activeJournals",
+            JSON.stringify(activeJournals)
+          );
+          //render active journal points
+          renderJournalPoints();
+        }
       }
-    }
-
-    if (tar.id === "add-journal") {
-      // add show form for creating new journal
-      $("#nameEntry").css("display", "block");
-    }
-    if (tar.id === "save-journal-name") {
-      // add a new journal to user list!
-      let newJournalName = $("input#journal-name-input").val();
-      if (newJournalName === "") {
-        newJournalName = `Journal #${$("#list-holder").children.length}`;
-      }
-      $("#nameEntry").css("display", "none");
-      //post new journal name to server!
-      //ADD CODE
-      //get user journals from server and repopulate
-    }
-    if (tar.id === "cancel-journal-name") {
-      $("input#journal-name-input").val("");
-      $("#nameEntry").css("display", "none");
     }
   });
 });
-//*********************************************************************************************
-////Update planetarium location
-function updatePlanetariumLocation(data) {
+
+function initPage() {
   openNav();
   closeNav();
-  S.virtualsky({
+  localStorage.removeItem("activeJournals");
+  localStorage.removeItem("activeSharedJournals");
+  activeJournals = [];
+  // activeJournals = JSON.parse(localStorage.getItem("activeJournals"));
+  // if (activeJournals === null) {
+  //   activeJournals = [];
+  // }
+  // activeSharedJournals = JSON.parse(
+  //   localStorage.getItem("activeSharedJournals")
+  // );
+  // if (activeSharedJournals === null) {
+  //   activeSharedJournals = [];
+  // }
+  //journals;//=JSON.parse(localStorage.getItem("journals"));
+  //sharedJournals;//= JSON.parse(localStorage.getItem("sharedJournals"));
+  //getUserJournals();
+  getSharedJournals();
+}
+//*********************************************************************************************
+////Get shared Journal data
+const sharedJournalList = $("#shared-journal-list");
+function getSharedJournals() {
+  $.get("/api/shared-journals", data => {
+    //render and populate shared journals
+    sharedJournals = data; // save journal data for rendering functions
+    sharedJournalList.empty(); // empty list of journals
+    data.forEach(element => {
+      let journalHTML = `<li style="font-size: 20px; color: ${element.color};"`;
+      if (activeJournals.indexOf(String(element.id)) === -1) {
+        // if this journal is not active, add the noShowList class
+        journalHTML += ` 
+        class="noShowList"`;
+      }
+      journalHTML += ` data-listName="${element.title}" data-journal-id="${element.id}">
+      ${element.title}
+      <i class="fas fa-plus-square add-square"></i
+      ><i class="fas fa-share-square share-arrow"></i
+      ><i class="far fa-times-circle delete-x"></i>
+      </li>`;
+      sharedJournalList.append(journalHTML);
+    });
+  });
+  renderJournalPoints();
+}
+
+function renderJournalPoints() {
+  if (activeJournals !== null) {
+    //if activeJournals are stored in local storage
+    const activeJournalsData = [];
+    activeJournals.forEach((journalId, indexAJ) => {
+      const found = sharedJournals.find(
+        journal => journalId === journal.id.toString()
+      );
+      if (found) {
+        activeJournalsData.push(found);
+      } else {
+        // matching id not found - remove from active journals
+        activeJournals.splice(indexAJ, 1);
+      }
+    });
+    activeJournalsData.forEach(journalData => {
+      updatePlanetariumPointers(journalData);
+    });
+  }
+}
+
+//*********************************************************************************************
+////Update planetarium location
+
+function updatePlanetariumLocation(data) {
+  planetarium = S.virtualsky({
+    id: "starmap", // This should match the ID used in the DOM
+    projection: "stereo",
+    latitude: data.coords.latitude,
+    longitude: data.coords.longitude
+  });
+  geoData = data;
+}
+
+function reRenderPlanetarium() {
+  const data = geoData;
+  planetarium = S.virtualsky({
     id: "starmap", // This should match the ID used in the DOM
     projection: "stereo",
     latitude: data.coords.latitude,
     longitude: data.coords.longitude
   });
 }
-////Show geolocation errors
+
+function updatePlanetariumPointers(data) {
+  const points = JSON.parse(data.points);
+  const numFieldsPerPoint = 3; // using three of a 7 per point
+  const numPoints = Object.keys(points).length / numFieldsPerPoint;
+  for (let i = 0; i < numPoints; i++) {
+    if (points[`point-${i}-name`] !== "") {
+      planetarium.addPointer({
+        ra: points[`point-${i}-ra`],
+        dec: points[`point-${i}-dec`],
+        label: points[`point-${i}-name`],
+        //img: "",
+        //url: "",
+        //credit: "",
+        colour: hexToRGB(data.color)
+      });
+    }
+  }
+}
+const hexToRGB = hex => {
+  const rgbArray = hex
+    .replace(
+      /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+      (m, r, g, b) => "#" + r + r + g + g + b + b
+    )
+    .substring(1)
+    .match(/.{2}/g)
+    .map(x => parseInt(x, 16));
+  return `rgb(${rgbArray.join()})`;
+};
+
 function showErrorGeolocation(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -177,6 +309,7 @@ function showErrorGeolocation(error) {
       break;
   }
 }
+
 //*********************************************************************************************
 ////Open and close the nav drawer
 /* Set the width of the side navigation to Xpx */

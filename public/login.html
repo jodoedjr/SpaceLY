@@ -143,7 +143,7 @@
         </div>
 
         <!-- SHARED JOURNALS SECTION! -->
-        <div class="panel panel-default">
+        <div class="panel panel-default journal-section">
           <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
               <a
@@ -166,7 +166,8 @@
             aria-labelledby="headingThree"
           >
             <div class="panel-body">
-              <h5>Coming Soon!</h5>
+              <ul id="shared-journal-list" class="no-bullets">
+              </ul>
             </div>
           </div>
         </div>
@@ -343,7 +344,7 @@
     </div>
 
     <div style="position: relative">
-      <span onclick="openNav()" style="height: 1vh; display: none;">open</span>
+      <span onclick="openNav()" style="display: none;">open</span>
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" onclick="openNav()" href="#"
           ><i class="fas fa-bars"></i> &ensp; SpaceLY
@@ -375,7 +376,7 @@
         </div> -->
       </nav>
 
-      <div id="starmap" style="height: 94vh;"></div>
+      <div id="starmap"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

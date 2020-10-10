@@ -192,8 +192,13 @@ function renderJournalPoints() {
       const found = journals.find(
         journal => journalId === journal.id.toString()
       );
+      const foundShared = sharedJournals.find(
+        journal => journalId === journal.id.toString()
+      );
       if (found) {
         activeJournalsData.push(found);
+      } else if (foundShared) {
+        activeJournalsData.push(foundShared);
       } else {
         // matching id not found - remove from active journals
         activeJournals.splice(indexAJ, 1);

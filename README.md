@@ -3,6 +3,7 @@
 ## Description 
 
 SpaceLY is an application that provides a localized map of objects in the night sky. SpaceLY is built around VirtualSky (https://virtualsky.lco.global/), which uses a html canvas element to create an interactable visualization of space objects visible from give latitude and longitude coordinates. SpaceLY enhances VirtualSky by providing passport-authenticated database access to store, share, and display points of interest saved in user journals.
+Presentation at: https://docs.google.com/presentation/d/1lW3swENwiEiRAvUTW-EB3-evA3MVwEnQRtRNqYpdrq0/edit?usp=sharing
 
 
 ## Table of Contents

@@ -1,0 +1,1 @@
+This branch is a copy of the default branch as it existied before June 2021, before a React refactor.
